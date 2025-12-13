@@ -3,13 +3,14 @@
 
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 using namespace std;
 
 const int questions = 20;
 
 void getAnswer(char answers[], const string& filename);
 int gradeExam(char correct[], char studentAnswer[], int question[], char Answer[][2]);
-void writeReport(int question[], int wrong, char Answer[][2]);
+void writeReport(int question[], int wrong, char Answer[][2], double percentageGrade);
 
 int main()
 {
@@ -23,7 +24,8 @@ int main()
 	char Answer[questions][2];
 	int wrong = gradeExam(correct, studentAnswer, question, Answer);
 
-	writeReport(question, wrong, Answer);
+	double percentageGrade = ((questions - wrong) * 1.0/questions) * 100.0;
+	writeReport(question, wrong, Answer, percentageGrade);
 
 	return 0;
 }
@@ -62,14 +64,25 @@ int gradeExam(char correct[], char studentAnswer[], int question[], char Answer[
 	return wrong;
 }
 
-void writeReport(int question[], int wrong, char Answer[][2])
+void writeReport(int question[], int wrong, char Answer[][2], double percentageGrade)
 {
 	cout << "Exam Report Details\n";
 	cout << "Number of questions missed: " << wrong << "\n";
 	cout << "Missed questions and correct answers: \n";
-	cout << "Question" << "\t" << "Correct Answer" << "\t\t" << "Your Answer\n";
+	cout << "Question" << setw(18) << "Correct Answer" << setw(18) << "Your Answer\n";
 	for (int a = 0; a < wrong; a++)
 	{
-		cout << question[a] << "\n";
+		cout << setw(4) << question[a] << setw(15) << Answer[a][0] << setw(17) << Answer[a][1];
+		cout << "\n";
+	}
+
+	cout << "Test Score: " << percentageGrade << "%\n";
+	if (percentageGrade < 70)
+	{
+		cout << "You failed the exam.\n";
+	}
+	else
+	{
+		cout << "You passed the exam.\n";
 	}
 }
